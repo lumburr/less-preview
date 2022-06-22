@@ -2,6 +2,9 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
+const props = defineProps(['store'])
+const { store } = props
+
 const baseVersionUrl = "https://cdn.jsdelivr.net/npm/less@";
 const activeVersion = ref("");
 const publishedVersions = ref<string[]>();
@@ -20,7 +23,12 @@ async function fetchVersions() {
     return { networkErrorMessage };
   }
   publishedVersions.value = data.versions;
-  activeVersion.value = publishedVersions.value[0];
+  if(!store.activeVersion){
+    activeVersion.value = publishedVersions.value[0];
+    store.activeVersion = activeVersion.value
+  }else {
+    activeVersion.value = store.activeVersion
+  }
 }
 
 function fetchLess() {
@@ -64,13 +72,16 @@ async function toggle() {
   expanded.value = !expanded.value;
 }
 
-async function setVueVersion(v: string) {
+async function setLessVersion(v: string) {
   activeVersion.value = v;
+  store.activeVersion = v;
   fetchLess();
 }
-
-fetchVersions();
-fetchLess();
+async function init() {
+  await fetchVersions();
+  fetchLess();
+}
+init()
 </script>
 
 <template>
@@ -96,7 +107,7 @@ fetchLess();
         </span>
         <ul v-if="expanded" class="versions">
           <li v-for="(item, index) in publishedVersions" :key="index">
-            <a @click="setVueVersion(item)">{{ item }}</a>
+            <a @click="setLessVersion(item)">{{ item }}</a>
           </li>
         </ul>
       </div>

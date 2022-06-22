@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header @updateVue="updateVue"></Header>
+    <Header @updateVue="updateVue" :store="store"></Header>
     <section :class="{container: true, 'has-error': errorMessage, 'refresh': updateStyle}">
       <div class="editor">
         <editor
@@ -43,6 +43,7 @@ import { VAceEditor } from 'vue3-ace-editor';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-less';
 import './theme-crunch-dark';
+import { utoa, atou } from './utils'
 
 export default {
   data() {
@@ -73,7 +74,10 @@ export default {
 }`,
       output: '',
       errorMessage: '',
-      updateWithLessInterval
+      updateWithLessInterval,
+      hash:'',
+      init:false,
+      store:{}
     }
   },
   methods: {
@@ -87,6 +91,7 @@ export default {
     updateWithLess() {
       if (window.less) {
         clearInterval(this.updateWithLessInterval)
+        this.serialize()
         const self = this
         window.less.render(this.input, {}, function(error, output) {
           if (error) {
@@ -101,6 +106,13 @@ export default {
     },
     editorInit: function () {
     },
+    serialize() {
+      const newHash = '#' + utoa(JSON.stringify({
+        code:this.input,
+        activeVersion:this.store.activeVersion
+      }))
+      history.replaceState({}, '', newHash)
+    }
   },
   components: {
     editor: VAceEditor,
@@ -119,9 +131,22 @@ export default {
   watch: {
     input(newInput) {
       this.updateVue(newInput)
+      if(!this.init && this.hash!=='' ) {
+        this.serialize()
+      }
+      this.init = false
     },
   },
   created: async function() {
+    this.hash = location.hash.slice(1)
+    if(this.hash) {
+      const saved = JSON.parse(atou(this.hash))
+      this.init = true
+      this.input = saved.code
+      this.store = saved
+    } else {
+      this.serialize()
+    }
   },
 }
 </script>
