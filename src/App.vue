@@ -1,49 +1,19 @@
 <template>
-  <div>
-    <Header @updateVue="updateVue" :store="store"></Header>
-    <section :class="{container: true, 'has-error': errorMessage, 'refresh': updateStyle}">
-      <div class="editor">
-        <editor
-          v-model:value="input"
-          lang="less"
-          theme="crunch-dark"
-          style="height: 100%"
-          :options="{
-            useWorker: true,
-            useSoftTabs: true,
-            tabSize: 2,
-          }"
-        ></editor>
-      </div>
-      <div class="editor">
-        <editor
-          v-model:value="output"
-          @init="editorInit"
-          lang="less"
-          theme="crunch-dark"
-          style="height: 100%"
-          :options="{
-            useSoftTabs: true,
-            tabSize: 2,
-            readOnly: true
-          }"
-        ></editor>
-      </div>
-    </section>
-    <div v-if="errorMessage" class="error">
-      {{errorMessage}}
-    </div>
+  <Header @updateVue="updateVue" :store="store" />
+  <section :class="{container: true, 'has-error': errorMessage, 'refresh': updateStyle}">
+    <editor class="editor" v-model:value="input"/>
+    <editor class="editor" v-model:value="output" readOnly />
+  </section>
+  <div v-if="errorMessage" class="error">
+    {{errorMessage}}
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { nextTick } from 'vue'
 import Header from './Header.vue'
-import { VAceEditor } from 'vue3-ace-editor';
-import 'ace-builds/src-noconflict/ext-language_tools';
-import 'ace-builds/src-noconflict/mode-less';
-import './theme-crunch-dark';
 import { utoa, atou } from './utils'
+import Editor from '@components/Editor.vue'
 
 export default {
   data() {
@@ -115,7 +85,7 @@ export default {
     }
   },
   components: {
-    editor: VAceEditor,
+    editor: Editor,
     Header
   },
   mounted() {
@@ -165,10 +135,6 @@ body {
 
 .container {
   height: calc(100vh - 40px);
-  display: flex;
-  justify-content: space-evenly;
-  align-items: stretch;
-  text-align: center;
   padding: 6px 0;
   &.has-error {
     height: calc(100vh - 60px);
@@ -197,6 +163,8 @@ body {
   animation: opac 1s;
 }
 .editor {
+  display: inline-block;
+  margin: auto;
   width: calc(50vw - 12px);
   border: 1px solid hsl(190, 10%, 50%);
 }
