@@ -2,6 +2,8 @@ lockfileVersion: 5.3
 
 specifiers:
   '@codemirror/lang-css': ^6.0.0
+  '@codemirror/theme-one-dark': ^6.0.0
+  '@types/less': ^3.0.3
   '@types/node': ^16.11.12
   '@vitejs/plugin-vue': ^2.3.3
   axios: ^0.26.1
@@ -14,11 +16,13 @@ specifiers:
 
 dependencies:
   '@codemirror/lang-css': 6.0.0
+  '@codemirror/theme-one-dark': 6.0.0
   axios: 0.26.1
   codemirror: 6.0.0
   vue: 3.2.37
 
 devDependencies:
+  '@types/less': 3.0.3
   '@types/node': 16.11.41
   '@vitejs/plugin-vue': 2.3.3_vite@2.9.12+vue@3.2.37
   less: 3.13.1
@@ -91,6 +95,15 @@ packages:
     resolution: {integrity: sha512-6vYgaXc4KjSY0BUfSVDJooGcoswg/RJZpq/ZGjsUYmY0KN1lmB8u03nv+jiG1ncUV5qoggyxFT5AGD5Ak+5Zrw==}
     dev: false
 
+  /@codemirror/theme-one-dark/6.0.0:
+    resolution: {integrity: sha512-jTCfi1I8QT++3m21Ui6sU8qwu3F/hLv161KLxfvkV1cYWSBwyUanmQFs89ChobQjBHi2x7s2k71wF9WYvE8fdw==}
+    dependencies:
+      '@codemirror/language': 6.0.0
+      '@codemirror/state': 6.0.1
+      '@codemirror/view': 6.0.1
+      '@lezer/highlight': 1.0.0
+    dev: false
+
   /@codemirror/view/6.0.1:
     resolution: {integrity: sha512-n5olUr4Ld+XDTZN8+cnUHzkqJPeO2kr55HvBQ+4C1xWlDaRGrsedAoxCgeuGZsXRTUup/H/0e2kAN+a0R3skdA==}
     dependencies:
@@ -121,6 +134,10 @@ packages:
     dependencies:
       '@lezer/common': 1.0.0
     dev: false
+
+  /@types/less/3.0.3:
+    resolution: {integrity: sha512-1YXyYH83h6We1djyoUEqTlVyQtCfJAFXELSKW2ZRtjHD4hQ82CC4lvrv5D0l0FLcKBaiPbXyi3MpMsI9ZRgKsw==}
+    dev: true
 
   /@types/node/16.11.41:
     resolution: {integrity: sha512-mqoYK2TnVjdkGk8qXAVGc/x9nSaTpSrFaGFm43BUH3IdoBV0nta6hYaGmdOvIMlbHJbUEVen3gvwpwovAZKNdQ==}

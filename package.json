@@ -23,11 +23,13 @@
   },
   "dependencies": {
     "@codemirror/lang-css": "^6.0.0",
-    "codemirror": "^6.0.0",
+    "@codemirror/theme-one-dark": "^6.0.0",
     "axios": "^0.26.1",
+    "codemirror": "^6.0.0",
     "vue": "^3.2.25"
   },
   "devDependencies": {
+    "@types/less": "^3.0.3",
     "@types/node": "^16.11.12",
     "@vitejs/plugin-vue": "^2.3.3",
     "less": "^3.7.1",

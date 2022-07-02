@@ -1,6 +1,3 @@
-<template>
-  <Codemirror :value='value' :theme='theme' :readOnly='readOnly'/>
-</template>
 <script lang="ts" setup>
 import Codemirror from './codemirror/Codemirror.vue';
 interface Props {
@@ -9,6 +6,16 @@ interface Props {
   readOnly?: boolean
 }
 const { value, theme, readOnly } = defineProps<Props>()
+const emit = defineEmits<(e: 'update:value', value: string) => void>()
+
+const inputValue = (localValue: string) => {
+  emit('update:value', localValue)
+}
 </script>
-<style lang="less">
-</style>
+<template>
+  <Codemirror
+    :value='value'
+    :theme='theme'
+    :readOnly='readOnly'
+    @input="inputValue"/>
+</template>

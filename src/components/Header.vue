@@ -147,7 +147,7 @@ init();
 @base: #35495e;
 @font-face {
   font-family: "iconfont";
-  src: url("./assets/iconfont.ttf") format("truetype");
+  src: url("../assets/iconfont.ttf") format("truetype");
 }
 .titlebar {
   position: relative;
@@ -162,7 +162,7 @@ init();
     display: inline-block;
     width: 52.8px;
     height: 23.4px;
-    background-image: url("./assets/less_logo.png");
+    background-image: url("../assets/less_logo.png");
     background-size: 52.8px 23.4px;
     background-repeat: no-repeat;
     margin-left: 3px;

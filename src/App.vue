@@ -1,153 +1,112 @@
 <template>
   <Header @updateVue="updateVue" :store="store" />
-  <section :class="{container: true, 'has-error': errorMessage, 'refresh': updateStyle}">
-    <editor class="editor" v-model:value="input"/>
-    <editor class="editor" v-model:value="output" readOnly />
-  </section>
+  <Layout>
+    <template #edit>
+      <editor v-model:value="input" />
+    </template>
+    <template #preview>
+      <editor v-model:value="output" readOnly />
+    </template>
+  </Layout>
   <div v-if="errorMessage" class="error">
-    {{errorMessage}}
+    {{ errorMessage }}
   </div>
 </template>
 
-<script lang="ts">
-import { nextTick } from 'vue'
-import Header from './Header.vue'
-import { utoa, atou } from './utils'
+<script lang="ts" setup>
+import { nextTick, onMounted, reactive, watch } from 'vue'
+import { utoa, atou, LESS_DATA } from './utils'
+import Header from '@components/Header.vue'
 import Editor from '@components/Editor.vue'
+import Layout from '@components/Layout.vue'
 
-export default {
-  data() {
-    let updateWithLessInterval
-    return {
-      updateStyle: false,
-      input: 
-`#lib() {
-  .colors() {
-    @primary: blue;
-    @secondary: green;
-  }
-  .rules(@size) {
-    border: @size solid white;
-  }
+let input = $ref(LESS_DATA)
+let output = $ref<string | undefined>('')
+let errorMessage = $ref('')
+let hash = $ref('')
+let store = reactive({ activeVersion: '4.x' })
+
+let updateWithLessInterval = setInterval(() => { }, 100)
+
+const serialize = () => {
+  const newHash = '#' + utoa(JSON.stringify({
+    code: input,
+    activeVersion: store.activeVersion
+  }))
+  history.replaceState({}, '', newHash)
 }
 
-.box when (#lib.colors[@primary] = blue) {
-  width: 100px;
-  height: ($width / 2);
-}
-
-.bar:extend(.box) {
-  @media (min-width: 600px) {
-    width: 200px;
-    #lib.rules(1px);
-  }
-}`,
-      output: '',
-      errorMessage: '',
-      updateWithLessInterval,
-      hash:'',
-      init:false,
-      store:{}
-    }
-  },
-  methods: {
-    updateVue() {
-      if (!window.less) {
-        this.updateWithLessInterval = setInterval(this.updateWithLess, 100)
+const updateWithLess = () => {
+  if (window.less) {
+    clearInterval(updateWithLessInterval)
+    serialize()
+    window.less.render(input, {}, (error, result) => {
+      if (error) {
+        errorMessage = error.message
+        output = ''
       } else {
-        this.updateWithLess()
+        errorMessage = ''
+        output = result?.css
       }
-    },
-    updateWithLess() {
-      if (window.less) {
-        clearInterval(this.updateWithLessInterval)
-        this.serialize()
-        const self = this
-        window.less.render(this.input, {}, function(error, output) {
-          if (error) {
-            self.errorMessage = error.message
-            self.output = ''
-          } else {
-            self.errorMessage = ''
-            self.output = output.css
-          }
-        })
-      }
-    },
-    editorInit: function () {
-    },
-    serialize() {
-      const newHash = '#' + utoa(JSON.stringify({
-        code:this.input,
-        activeVersion:this.store.activeVersion
-      }))
-      history.replaceState({}, '', newHash)
-    }
-  },
-  components: {
-    editor: Editor,
-    Header
-  },
-  mounted() {
-    nextTick(() => {
-      this.updateVue(this.input)
-      this.updateStyle = true
-      requestAnimationFrame(() => {
-        void document.offsetHeight
-        this.updateStyle = false
-      })
     })
-  },
-  watch: {
-    input(newInput) {
-      this.updateVue(newInput)
-      if(!this.init && this.hash!=='' ) {
-        this.serialize()
-      }
-      this.init = false
-    },
-  },
-  created: async function() {
-    this.hash = location.hash.slice(1)
-    if(this.hash) {
-      const saved = JSON.parse(atou(this.hash))
-      this.init = true
-      this.input = saved.code
-      this.store = saved
-    } else {
-      this.serialize()
-    }
-  },
+  }
 }
+
+const updateVue = () => {
+  if (!window.less) {
+    updateWithLessInterval = setInterval(updateWithLess, 100)
+  } else {
+    updateWithLess()
+  }
+}
+
+hash = location.hash.slice(1)
+if (hash) {
+  const saved = JSON.parse(atou(hash))
+  input = saved.code
+  store = saved
+} else {
+  serialize()
+}
+
+watch(() => input, () => {
+  updateVue()
+  if (hash !== '') {
+    serialize()
+  }
+})
+
+onMounted(() => {
+  nextTick(() => {
+    updateVue()
+  })
+})
+
 </script>
 
 <style lang="less">
-html, body {
+html,
+body {
   margin: 0;
 }
+
 @base: #35495e;
+
 body {
   background: @base;
 }
-*, *::before, *::after {
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-.container {
-  height: calc(100vh - 40px);
-  padding: 6px 0;
-  &.has-error {
-    height: calc(100vh - 60px);
-  }
-  &.refresh {
-    text-indent: 0.1px;
-    -webkit-text-stroke: 0.1px transparent;
-  }
-}
 @keyframes opac {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -161,11 +120,5 @@ body {
   position: relative;
   top: -6px;
   animation: opac 1s;
-}
-.editor {
-  display: inline-block;
-  margin: auto;
-  width: calc(50vw - 12px);
-  border: 1px solid hsl(190, 10%, 50%);
 }
 </style>
