@@ -7,9 +7,9 @@ const msg = require('fs').readFileSync(msgPath, 'utf-8').trim()
 const releaseRE = /^v\d/
 const commitRE =
   /^(revert: )?(feat|fix|docs|dx|refactor|perf|test|workflow|build|ci|chore|types|wip|release|deps)(\(.+\))?: .{1,50}/
-
+  console.log('被调用了1')
 if (!releaseRE.test(msg) && !commitRE.test(msg)) {
-  console.log()
+  console.log('被调用了2')
   console.error(
     `  ${chalk.bgRed.white(' ERROR ')} ${chalk.red(
       `invalid commit message format.`,
