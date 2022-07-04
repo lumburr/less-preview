@@ -12,7 +12,7 @@
   },
   "gitHooks": {
     "pre-commit": "lint-staged",
-    "commit-msg": "node -v"
+    "commit-msg": "node scripts/verifyCommit.js"
   },
   "lint-staged": {
     "*.{js,vue,ts}": [
@@ -30,9 +30,10 @@
   "devDependencies": {
     "@types/less": "^3.0.3",
     "@types/node": "^16.11.12",
-    "@typescript-eslint/eslint-plugin": "^5.30.4",
-    "@typescript-eslint/parser": "^5.30.4",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
     "@vitejs/plugin-vue": "^2.3.3",
+    "chalk": "^5.0.1",
     "eslint": "^8.19.0",
     "eslint-plugin-vue": "^9.1.1",
     "less": "^3.7.1",
