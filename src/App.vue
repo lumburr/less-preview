@@ -28,6 +28,7 @@ let store = reactive({ activeVersion: '4.x' })
 
 let updateWithLessInterval = setInterval(() => { }, 100)
 
+let a = "" 
 const serialize = () => {
   const newHash = '#' + utoa(JSON.stringify({
     code: input,
