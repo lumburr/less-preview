@@ -32,8 +32,8 @@ const updateVue = () => {
     })
 }
 
-const upLoadingLessJS = () =>{
-  loadingLessJS = !loadingLessJS
+const upLoadingLessJS = (loadingFlag:boolean) =>{
+  loadingLessJS = loadingFlag
 }
 
 hash = location.hash.slice(1)

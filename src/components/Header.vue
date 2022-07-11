@@ -29,7 +29,7 @@ async function fetchVersions() {
 }
 
 function fetchLess() {
-  emit("upLoadingLessJS");
+  emit("upLoadingLessJS", true);
   const url = baseVersionUrl + activeVersion;
   let firstLoad = false;
   const scriptDom = document.getElementById("lessScript");
@@ -49,7 +49,7 @@ function fetchLess() {
       showTip();
     }
     emit("updateVue");
-    emit("upLoadingLessJS");
+    emit("upLoadingLessJS", false);
   };
   newScript.onerror = () => {
     if (!firstLoad) {
