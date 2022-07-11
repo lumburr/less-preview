@@ -29,7 +29,7 @@ async function fetchVersions() {
 }
 
 function fetchLess() {
-  emit("upLoadingLessJS");
+  emit("upLoadingLessJS", true);
   const url = baseVersionUrl + activeVersion;
   let firstLoad = false;
   const scriptDom = document.getElementById("lessScript");
@@ -49,7 +49,7 @@ function fetchLess() {
       showTip();
     }
     emit("updateVue");
-    emit("upLoadingLessJS");
+    emit("upLoadingLessJS", false);
   };
   newScript.onerror = () => {
     if (!firstLoad) {
@@ -191,10 +191,6 @@ init();
     }
   }
   .version-select-tips {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
     width: 450px;
     z-index: 100;
     font-family: "Quicksand", "Source Sans Pro", -apple-system,
