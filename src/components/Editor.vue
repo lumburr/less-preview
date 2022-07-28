@@ -4,12 +4,12 @@ interface Props {
   value?: string
   theme?: string
   readOnly?: boolean
+  store?: Object
 }
-const { value, theme, readOnly } = defineProps<Props>()
-const emit = defineEmits<(e: 'update:value', value: string) => void>()
-
+const { value, theme, readOnly, store } = defineProps<Props>()
+const emit = defineEmits(['updateCode'])
 const inputValue = (localValue: string) => {
-  emit('update:value', localValue)
+  emit('updateCode', localValue)
 }
 </script>
 <template>

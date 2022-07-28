@@ -9,7 +9,7 @@ let publishedVersions = $ref<string[]>();
 let expanded = $ref(false);
 let showTipFlag = $ref(false);
 let versionSelectFail = $ref(false);
-const emit = defineEmits(["updateVue", 'upLoadingLessJS']);
+const emit = defineEmits(["updateOutput", 'upLoadingLessJS']);
 
 async function fetchVersions() {
   let { data } = await axios.get(
@@ -29,7 +29,7 @@ async function fetchVersions() {
 }
 
 function fetchLess() {
-  emit("upLoadingLessJS");
+  emit("upLoadingLessJS", true);
   const url = baseVersionUrl + activeVersion;
   let firstLoad = false;
   const scriptDom = document.getElementById("lessScript");
@@ -48,8 +48,8 @@ function fetchLess() {
       versionSelectFail = false;
       showTip();
     }
-    emit("updateVue");
-    emit("upLoadingLessJS");
+    emit("updateOutput");
+    emit("upLoadingLessJS", false);
   };
   newScript.onerror = () => {
     if (!firstLoad) {
@@ -191,10 +191,6 @@ init();
     }
   }
   .version-select-tips {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
     width: 450px;
     z-index: 100;
     font-family: "Quicksand", "Source Sans Pro", -apple-system,
